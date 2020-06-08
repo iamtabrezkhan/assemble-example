@@ -1,19 +1,22 @@
 "use strict";
 
-var assemble = require("assemble");
-var app = assemble();
+const assemble = require("assemble");
+const extname = require('gulp-extname');
 
-app.task("load", function (cb) {
+const app = assemble();
+
+app.task("load", (cb) => {
   app.partials("src/partials/*.hbs");
   app.layouts("src/layouts/*.hbs");
   app.pages("src/pages/*.hbs");
   cb();
 });
 
-app.task("default", ["load"], function () {
+app.task("default", ["load"], () => {
   return app
     .toStream("pages")
     .pipe(app.renderFile("hbs"))
+    .pipe(extname())
     .pipe(app.dest("dist"));
 });
 
